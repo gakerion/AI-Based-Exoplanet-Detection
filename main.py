@@ -65,7 +65,6 @@ model.eval()
 
 print("Model loaded.")
 print("Device map:")
-print(model.hf_device_map)
 
 
 # ============================================================
