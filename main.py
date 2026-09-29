@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import csv
 import random
+=======
+import pandas as pd
+import torch
+>>>>>>> experimental
 
 import pandas as pd
 import xgboost as xgb
@@ -16,6 +21,23 @@ MODEL_NAME = "AstroMLab/AstroSage-8B"
 
 
 # ============================================================
+<<<<<<< HEAD
+=======
+# 1. SETTINGS
+# ============================================================
+
+MODEL_NAME = "AstroMLab/AstroSage-8B"
+CSV_FILE = "cumulative_copy.csv"
+
+LABELS = [
+    "confirmed exoplanet",
+    "exoplanet candidate",
+    "false positive"
+]
+
+
+# ============================================================
+>>>>>>> experimental
 # 2. 4-BIT QUANTIZATION
 # ============================================================
 
@@ -58,6 +80,7 @@ model = AutoModelForCausalLM.from_pretrained(
 model.eval()
 
 print("Model loaded.")
+<<<<<<< HEAD
 
 
 # ============================================================
@@ -104,3 +127,6 @@ def get_random_kpids(filename):
     random.shuffle(selected)
 
     return selected
+=======
+print("Device map:")
+>>>>>>> experimental
