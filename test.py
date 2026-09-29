@@ -314,10 +314,6 @@ def lookup_star(kic_id):
     return star_data
 
 
-# ============================================================
-# 6. ASTROSAGE
-# ============================================================
-
 def get_star_info(kic_id):
 
     star_data = lookup_star(kic_id)
@@ -350,4 +346,5 @@ while True:
 
     print("\nAstroSage:")
     print(answer)
-
+    print("")
+    print(lookup_star(kic_id))
