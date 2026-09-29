@@ -1,57 +1,8 @@
-# ============================================================
-# test_astrosage.py
-#
-# KIC ID
-#   ↓
-# NASA Exoplanet Archive
-#   ↓
-# radius / distance / metallicity
-#
-# KIC ID
-#   ↓
-# VizieR APOGEE/Kepler catalog
-#   ↓
-# oxygen abundance
-#
-# Retrieved values
-#   ↓
-# AstroSage-8B
-#   ↓
-# scientific response
-# ============================================================
-
 import requests
 import pandas as pd
 import io
 import torch
 
-from transformers import pipeline, BitsAndBytesConfig
-
-
-# ============================================================
-# 1. ASTROSAGE MODEL
-# ============================================================
-
-MODEL_NAME = "AstroMLab/AstroSage-8B"
-
-
-# 4-bit quantization
-quant_config = BitsAndBytesConfig(
-    load_in_4bit=True,
-    bnb_4bit_compute_dtype=torch.float16,
-    bnb_4bit_quant_type="nf4",
-    bnb_4bit_use_double_quant=True
-)
-
-
-generator = pipeline(
-    "text-generation",
-    model=MODEL_NAME,
-    model_kwargs={
-        "quantization_config": quant_config
-    },
-    device_map="auto"
-)
 
 
 # ============================================================
