@@ -274,135 +274,33 @@ def lookup_star(kic_id):
 # 6. ASTROSAGE
 # ============================================================
 
-def ask_astrosage(kic_id):
-
-    # --------------------------------------------------------
-    # FIRST: get verified catalog data
-    # --------------------------------------------------------
+def get_star_info(kic_id):
 
     star_data = lookup_star(kic_id)
 
-
-    # --------------------------------------------------------
-    # SECOND: construct a prompt containing the actual data
-    # --------------------------------------------------------
-
-    prompt = f"""
-You are AstroSage, an astronomy AI assistant.
-
-You have been given verified stellar catalog data.
-
-Do NOT search your own memory for these values.
-Do NOT invent or estimate missing values.
-Do NOT change any numerical value supplied below.
-
-KIC ID:
-{kic_id}
-
-Verified stellar data:
-
-Oxygen abundance [O/H]:
-{star_data["Oxygen"]}
-
-Metallicity [Fe/H]:
-{star_data["Metallicity"]}
-
-Stellar Radius:
-{star_data["Radius"]} solar radii
-
-Distance:
-{star_data["Distance"]} parsecs
-
-
-TASK:
-
-Return exactly these four values.
-
-Use exactly this format:
-
-- Oxygen: ...
-- Metallicity: ...
-- Radius: ...
-- Distance: ...
-
-If a value is "Unknown", output "Unknown".
-
-Do not add any other text.
-"""
-
-
-    # --------------------------------------------------------
-    # THIRD: ask AstroSage
-    # --------------------------------------------------------
-
-    result = generator(
-        prompt,
-        max_new_tokens=150,
-        temperature=0.1,
-        do_sample=False,
-        return_full_text=False
+    return (
+        f"- Oxygen: {star_data['Oxygen']}\n"
+        f"- Metallicity: {star_data['Metallicity']}\n"
+        f"- Radius: {star_data['Radius']}\n"
+        f"- Distance: {star_data['Distance']}"
     )
-
-
-    answer = result[0]["generated_text"].strip()
-
-    return answer, star_data
-
-
-# ============================================================
-# 7. TERMINAL TEST
-# ============================================================
-
-print("=" * 65)
-print("                 AstroSage KIC LOOKUP")
-print("=" * 65)
-
-print("Enter a KIC ID.")
-print("Type 'exit' to quit.")
-print("=" * 65)
 
 
 while True:
 
     user_input = input("\nKIC ID: ").strip()
 
-
     if user_input.lower() == "exit":
-
         print("Exiting AstroSage...")
-
         break
 
-
-    # --------------------------------------------------------
-    # Validate KIC
-    # --------------------------------------------------------
-
     try:
-
         kic_id = int(user_input)
-
     except ValueError:
-
         print("Please enter a valid numeric KIC ID.")
-
         continue
 
-
-    # --------------------------------------------------------
-    # Lookup + AstroSage
-    # --------------------------------------------------------
-
-    answer, raw_data = ask_astrosage(kic_id)
-
+    answer = get_star_info(kic_id)
 
     print("\nAstroSage:")
     print(answer)
-
-
-    # --------------------------------------------------------
-    # Optional debugging
-    # --------------------------------------------------------
-
-    print("\n[Retrieved catalog data]")
-    print(raw_data)
