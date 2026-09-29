@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "howler": "^2.2.4",
+    "react-simple-typewriter": "^5.0.1"
+  }
+}

@@ -1,0 +1,121 @@
+.planet-selection-page {
+  min-height: calc(100vh - 80px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: relative;
+}
+
+
+/* Planet container */
+
+.planet-grid {
+  width: 750px;
+
+  display: flex;
+  flex-wrap: wrap;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 20px;
+}
+
+
+/* Planet card */
+
+.planet-card {
+  width: 190px;
+  height: 190px;
+
+  background: #000;
+
+  border: 1px solid #aaa;
+  border-radius: 4px;
+
+  padding: 15px;
+
+  color: white;
+
+  cursor: pointer;
+
+  font-family: "Handjet", sans-serif;
+
+  transition: 0.15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.planet-card:hover {
+  border-color: #7fffff;
+  transform: translateY(-4px);
+}
+
+.planet-card.selected {
+  border: 2px solid #7fffff;
+}
+
+
+/* Planet image */
+
+.planet-image {
+  display: block;
+
+  width: 100px;
+  height: 100px;
+
+  object-fit: contain;
+
+  margin: 0 auto 10px;
+}
+
+
+/* Text */
+
+.planet-id {
+  margin: 0;
+  margin-top: 10px;
+
+  font-size: 25px;
+}
+
+.planet-name {
+  margin: 3px 0 0;
+
+  font-size: 15px;
+}
+
+
+/* Proceed */
+
+.planet-selection-page .proceed-btn {
+  position: absolute;
+
+  right: 30px;
+  bottom: 20px;
+
+  padding: 8px 25px;
+
+  border: none;
+
+  background: #b8ffff;
+  color: #111;
+
+  cursor: pointer;
+
+  font-family: "Handjet", sans-serif;
+  font-size: 17px;
+}
+
+.planet-selection-page .proceed-btn:hover {
+  background: white;
+}
+
+.planet-selection-page .proceed-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}       
