@@ -1,99 +1,126 @@
-from transformers import pipeline , BitsAndBytesConfig
 import pandas as pd
-import torch
+import xgboost as xgb
 
-quant_config = BitsAndBytesConfig(
-    load_in_4bit=True,
-    bnb_4bit_compute_dtype=torch.float16,
-    bnb_4bit_quant_type="nf4",
-    bnb_4bit_use_double_quant=True
-)
 
-# -----------------------------
+# ============================================================
 # 1. Load dataset
-# -----------------------------
+# ============================================================
 
 df = pd.read_csv("cumulative_copy.csv")
 
 
-# -----------------------------
-# 2. Load Hugging Face model
-# -----------------------------
+# ============================================================
+# 2. Features used by XGBoost
+# ============================================================
 
-classifier = pipeline(
-    "zero-shot-classification",
-    model="AstroMLab/AstroSage-8B",
-    device=0,
-    model_kwargs={
-        "quantization_config": quant_config
-    }
-)
-
-# -----------------------------
-# 3. Possible classifications
-# -----------------------------
-
-candidate_labels = [
-    "confirmed exoplanet",
-    "exoplanet candidate",
-    "false positive"
+features = [
+    "koi_period",
+    "koi_impact",
+    "koi_duration",
+    "koi_depth",
+    "koi_prad",
+    "koi_teq",
+    "koi_insol",
+    "koi_model_snr",
+    "koi_steff",
+    "koi_slogg",
+    "koi_srad",
+    "koi_kepmag",
 ]
 
 
-# -----------------------------
-# 4. Process each star
-# -----------------------------
+# ============================================================
+# 3. Load trained XGBoost model
+# ============================================================
+
+model = xgb.XGBClassifier()
+
+model.load_model("exoplanet_xgboost.json")
+
+print("XGBoost model loaded successfully!")
+
+
+# ============================================================
+# 4. Class mapping
+# ============================================================
+
+# If you trained the model using LabelEncoder,
+# LabelEncoder sorts these alphabetically:
+#
+# 0 = CANDIDATE
+# 1 = CONFIRMED
+# 2 = FALSE POSITIVE
+
+class_names = [
+    "CANDIDATE",
+    "CONFIRMED",
+    "FALSE POSITIVE"
+]
+
+
+# ============================================================
+# 5. Analyze each star
+# ============================================================
 
 for kepid, star_data in df.groupby("kepid"):
 
-    print("\n" + "=" * 50)
+    print("\n" + "=" * 60)
     print(f"STAR: {kepid}")
     print(f"Number of candidates: {len(star_data)}")
-    print("=" * 50)
+    print("=" * 60)
 
-    descriptions = []
 
-    # -------------------------
-    # 5. Process each candidate
-    # -------------------------
+    # ========================================================
+    # 6. Analyze each candidate around the star
+    # ========================================================
 
     for _, row in star_data.iterrows():
 
-        description = (
-            f"This astronomical candidate has "
-            f"an orbital period of {row['koi_period']:.2f} days, "
-            f"a transit duration of {row['koi_duration']:.2f} hours, "
-            f"a transit depth of {row['koi_depth']:.2f} ppm, "
-            f"an estimated planet radius of {row['koi_prad']:.2f} Earth radii, "
-            f"and a stellar radius of {row['koi_srad']:.2f} solar radii."
+        # --------------------------------------------
+        # Create model input
+        # --------------------------------------------
+
+        candidate_data = pd.DataFrame([{
+            feature: row[feature]
+            for feature in features
+        }])
+
+        # --------------------------------------------
+        # Handle missing values
+        # --------------------------------------------
+
+        candidate_data = candidate_data.fillna(
+            df[features].median()
         )
 
-        descriptions.append(description)
+        # --------------------------------------------
+        # XGBoost prediction
+        # --------------------------------------------
 
-    # -----------------------------
-    # 6. Combine candidates
-    # -----------------------------
+        prediction = model.predict(candidate_data)[0]
 
-    star_text = " ".join(descriptions)
+        probabilities = model.predict_proba(
+            candidate_data
+        )[0]
 
-    print("\nInformation sent to AI:")
-    print(star_text)
+        predicted_class = class_names[int(prediction)]
 
-    # -----------------------------
-    # 7. Ask AI to classify it
-    # -----------------------------
 
-    result = classifier(
-        star_text,
-        candidate_labels=candidate_labels
-    )
+        # ====================================================
+        # 7. Display results
+        # ====================================================
 
-    # -----------------------------
-    # 8. Display result
-    # -----------------------------
+        print("\nCandidate:", row["kepoi_name"])
 
-    print("\nAI prediction:")
-    print(result["labels"][0])
+        print("\nXGBoost prediction:")
+        print(predicted_class)
 
-    print("AI score:")
-    print(result["scores"][0])
+        print("\nProbabilities:")
+
+        for class_name, probability in zip(
+            class_names,
+            probabilities
+        ):
+            print(
+                f"{class_name}: {probability:.2%}"
+            )
