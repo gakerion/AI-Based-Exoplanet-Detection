@@ -16,14 +16,17 @@ NASA_TAP_URL = (
 
 def get_nasa_stellar_data(kic_id):
 
+    url = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync"
+
     query = f"""
         SELECT
             kepid,
-            feh,
+            mass,
+            logg,
             radius,
             dist
         FROM keplerstellar
-        WHERE kepid = {kic_id}
+        WHERE kepid = {int(kic_id)}
     """
 
     params = {
@@ -34,28 +37,40 @@ def get_nasa_stellar_data(kic_id):
     try:
 
         response = requests.get(
-            NASA_TAP_URL,
+            url,
             params=params,
-            timeout=20
+            timeout=30
         )
 
         response.raise_for_status()
 
         data = response.json()
 
-        if not data:
+        if len(data) < 4:
             return {
-                "Metallicity": "Unknown",
+                "Mass": "Unknown",
+                "Gravity": "Unknown",
                 "Radius": "Unknown",
                 "Distance": "Unknown"
             }
 
-        row = data[0]
+        # ---------------------------------------------
+        # 3rd record → Mass, Gravity, Radius
+        # ---------------------------------------------
+
+        row_3 = data[2]
+
+        # ---------------------------------------------
+        # 4th record → Distance
+        # ---------------------------------------------
+
+        row_4 = data[3]
 
         return {
-            "Metallicity": clean_value(row.get("feh")),
-            "Radius": clean_value(row.get("radius")),
-            "Distance": clean_value(row.get("dist"))
+            "Mass": clean_value(row_3.get("mass")),
+            "Gravity": clean_value(row_3.get("logg")),
+            "Radius": clean_value(row_3.get("radius")),
+            "Distance": clean_value(row_4.get("dist"))
         }
 
     except Exception as e:
@@ -63,12 +78,11 @@ def get_nasa_stellar_data(kic_id):
         print("NASA lookup error:", e)
 
         return {
-            "Metallicity": "Unknown",
+            "Mass": "Unknown",
+            "Gravity": "Unknown",
             "Radius": "Unknown",
             "Distance": "Unknown"
         }
-
-
 # ============================================================
 # 3. VIZIER OXYGEN CATALOG
 # ============================================================
@@ -76,7 +90,7 @@ def get_nasa_stellar_data(kic_id):
 VIZIER_FIELD_URL = (
     "https://cdsarc.cds.unistra.fr/ftp/cats/J/A+A/594/A43/field.dat"
 )
-
+VIZIER_URL = "https://vizier.cds.unistra.fr/viz-bin/asu-tsv"
 
 _vizier_field_data = None
 
@@ -150,24 +164,108 @@ def load_vizier_catalog():
             columns=["KIC", "Oxygen"]
         )
 
-
 def get_oxygen(kic_id):
 
-    catalog = load_vizier_catalog()
+    url = "https://vizier.cds.unistra.fr/viz-bin/asu-tsv"
 
-    if catalog.empty:
+    params = {
+        "-source": "J/A+A/594/A43/field",
+        "KIC": f"={int(kic_id)}",
+        "-out": "KIC,[O/H]",
+        "-out.max": "1"
+    }
+
+    try:
+        response = requests.get(
+            url,
+            params=params,
+            timeout=30
+        )
+
+        response.raise_for_status()
+
+        lines = response.text.splitlines()
+
+        # Find the actual data row.
+        for line in lines:
+
+            line = line.strip()
+
+            # Skip comments, headers, separators and empty lines
+            if (
+                not line
+                or line.startswith("#")
+                or line.startswith("KIC")
+                or line.startswith("-")
+            ):
+                continue
+
+            parts = line.split()
+
+            # Expected:
+            # 10907196 -0.16
+            if len(parts) >= 2:
+
+                returned_kic = parts[0]
+                oxygen = parts[1]
+
+                if returned_kic == str(int(kic_id)):
+
+                    try:
+                        return float(oxygen)
+                    except ValueError:
+                        return "Unknown"
+
         return "Unknown"
 
-    match = catalog[
-        catalog["KIC"] == int(kic_id)
-    ]
+    except Exception as e:
+        print("VizieR oxygen lookup error:", e)
+        return "Unknown"
+    
+def get_hydrogen(kic_id):
+    """
+    Look up hydrogen for a KIC ID.
 
-    if match.empty:
+    NASA's keplerstellar catalog does not contain
+    a direct hydrogen abundance/mass-fraction column.
+
+    Therefore, if no direct database value is available,
+    return Unknown. No estimation is performed.
+    """
+
+    url = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync"
+
+    query = f"""
+        SELECT kepid
+        FROM keplerstellar
+        WHERE kepid = {int(kic_id)}
+    """
+
+    params = {
+        "query": query,
+        "format": "json"
+    }
+
+    try:
+        response = requests.get(
+            url,
+            params=params,
+            timeout=20
+        )
+
+        response.raise_for_status()
+
+        data = response.json()
+
+        if not data:
+            return "Unknown"
+
+        # The catalog has no direct hydrogen field.
         return "Unknown"
 
-    oxygen = match.iloc[0]["Oxygen"]
-
-    return clean_value(oxygen)
+    except Exception as e:
+        print("Hydrogen lookup error:", e)
+        return "Unknown"
 
 
 # ============================================================
@@ -198,26 +296,21 @@ def clean_value(value):
 
 def lookup_star(kic_id):
 
-    print("\nLooking up KIC:", kic_id)
-
     nasa_data = get_nasa_stellar_data(kic_id)
 
     oxygen = get_oxygen(kic_id)
 
-    star_data = {
+    hydrogen = get_hydrogen(kic_id)
 
-        "KIC ID": int(kic_id),
-
+    return {
         "Oxygen": oxygen,
-
-        "Metallicity": nasa_data["Metallicity"],
-
+        "Metallicity": "Unknown",
+        "Mass": nasa_data["Mass"],
+        "Gravity": nasa_data["Gravity"],
         "Radius": nasa_data["Radius"],
-
-        "Distance": nasa_data["Distance"]
-
+        "Distance": nasa_data["Distance"],
+        "Hydrogen": hydrogen
     }
-
     return star_data
 
 
@@ -232,13 +325,15 @@ def get_star_info(kic_id):
     return (
         f"- Oxygen: {star_data['Oxygen']}\n"
         f"- Metallicity: {star_data['Metallicity']}\n"
+        f"- Mass: {star_data['Mass']}\n"
+        f"- Gravity: {star_data['Gravity']}\n"
         f"- Radius: {star_data['Radius']}\n"
-        f"- Distance: {star_data['Distance']}"
+        f"- Distance: {star_data['Distance']}\n"
+        f"- Hydrogen: {star_data['Hydrogen']}"
     )
 
 
 while True:
-
     user_input = input("\nKIC ID: ").strip()
 
     if user_input.lower() == "exit":
@@ -255,3 +350,4 @@ while True:
 
     print("\nAstroSage:")
     print(answer)
+
