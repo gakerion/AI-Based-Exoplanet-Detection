@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist+Pixel:ELSH@9&family=Handjet:wght,ELSH@100..900,2&display=swap');
+
+.mission-intro-page {
+  min-height: calc(100vh - 80px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: relative;
+}
+
+.mission-terminal {
+  position: relative;
+
+  width: 485px;
+  min-height: 320px;
+
+  background: #000;
+
+  border: 1px solid #aaa;
+  border-radius: 5px;
+
+  padding: 18px 8px 50px;
+
+  color: white;
+
+  font-family: "Handjet", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+
+  font-variation-settings:
+    "ELGR" 1,
+    "ELSH" 2;
+
+  font-size: 20px;
+}
+
+
+/* System back online */
+
+.mission-line {
+  margin: 0 0 18px;
+
+  font-family: "Handjet", sans-serif;
+
+  font-size: 22px;
+}
+
+.mission-line span,
+.mission-message span {
+  color: #7fffff;
+  font-weight: bold;
+}
+
+
+/* Main message */
+
+.mission-message {
+
+  padding: 3px 3px;
+
+  line-height: 1.35;
+
+  font-family: "Handjet", sans-serif;
+
+  font-size: 20px;
+
+  font-variation-settings:
+    "ELGR" 1,
+    "ELSH" 2;
+}
+
+
+/* Proceed */
+
+.mission-terminal .proceed-btn {
+  position: absolute;
+
+  right: 8px;
+  bottom: 15px;
+
+  padding: 7px 22px;
+
+  background: #b8ffff;
+
+  border: none;
+
+  color: #111;
+
+  cursor: pointer;
+
+  font-family: "Handjet", sans-serif;
+
+  font-size: 16px;
+
+  font-weight: 400;
+
+  font-variation-settings:
+    "ELGR" 1,
+    "ELSH" 2;
+}
+
+.mission-terminal .proceed-btn:hover {
+  background: white;
+}

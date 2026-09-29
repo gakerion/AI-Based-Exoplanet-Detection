@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist+Pixel:ELSH@9&family=Handjet:wght,ELSH@100..900,2&display=swap');
+
+.planet-details-page {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  font-family: "Handjet", sans-serif;
+}
+
+.planet-details-box {
+  width: 650px;
+  min-height: 280px;
+  display: flex;
+  background: #000;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  padding: 35px;
+  color: white;
+  font-family: "Handjet", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "ELGR" 1,
+    "ELSH" 2;
+}
+
+.planet-info {
+  width: 23%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.details-planet-image {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  margin-bottom: 20px;
+}
+
+.planet-info h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.planet-info p {
+  margin: 5px 0 0;
+  font-size: 18px;
+}
+
+.planet-description {
+  width: 65%;
+  padding-left: 30px;
+  font-size: 22px;
+  line-height: 1.2;
+  font-family: "Handjet", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "ELGR" 1,
+    "ELSH" 2;
+}
+
+.planet-description p {
+  margin: 0 0 8px;
+}
+
+.planet-details-buttons {
+  position: absolute;
+  right: 35px;
+  bottom: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.planet-details-buttons button {
+  padding: 8px 15px;
+  border: none;
+  background: #b8ffff;
+  color: #111;
+  cursor: pointer;
+  font-family: "Handjet", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "ELGR" 1,
+    "ELSH" 2;
+  font-size: 17px;
+}
+
+.planet-details-buttons button:hover {
+  background: white;
+}

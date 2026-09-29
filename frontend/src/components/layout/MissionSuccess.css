@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Handjet:wght,ELSH@100..900,2&display=swap');
+
+
+.success-page {
+  min-height: calc(100vh - 80px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: relative;
+
+  font-family: "Handjet", sans-serif;
+  font-weight: 400;
+
+  color: white;
+}
+
+
+/* =========================
+   MAIN CARD
+========================= */
+
+.success-card {
+  width: 700px;
+  min-height: 320px;
+
+  background: #000;
+
+  border: 1px solid white;
+  border-radius: 5px;
+
+  padding: 38px 20px;
+
+  display: flex;
+  gap: 38px;
+
+  color: white;
+}
+
+
+/* =========================
+   LEFT SIDE
+========================= */
+
+.success-planet {
+  width: 190px;
+  flex-shrink: 0;
+}
+
+
+/* Planet image background */
+
+.success-image-box {
+  width: 115px;
+  height: 115px;
+
+  background: #30133f;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-bottom: 20px;
+}
+
+
+/* Planet */
+
+.success-planet-image {
+  width: 105px;
+  height: 105px;
+
+  object-fit: contain;
+}
+
+
+/* Star ID */
+
+.success-planet h3 {
+  font-size: 22px;
+
+  margin: 0 0 7px;
+
+  white-space: nowrap;
+}
+
+
+/* Planet name */
+
+.success-planet p {
+  font-size: 17px;
+
+  margin: 0;
+
+  white-space: nowrap;
+}
+
+
+/* =========================
+   RIGHT TERMINAL
+========================= */
+
+.success-terminal {
+  flex: 1;
+
+  min-height: 235px;
+
+  border: 2px dotted #00ffff;
+
+  padding: 10px;
+
+  font-size: 18px;
+
+  line-height: 1.25;
+}
+
+
+/* Terminal paragraphs */
+
+.success-terminal p {
+  margin: 0 0 14px;
+}
+
+
+/* >>> */
+
+.success-terminal span {
+  color: #7fffff;
+
+  font-weight: bold;
+}
+
+
+/* First message */
+
+.success-message {
+  margin-bottom: 18px !important;
+}
+
+
+/* =========================
+   SIGN OFF BUTTON
+========================= */
+
+.signoff-btn {
+  position: absolute;
+
+  right: 25px;
+  bottom: 25px;
+
+  width: 140px;
+  height: 35px;
+
+  border: none;
+
+  background: #b8ffff;
+  color: #111;
+
+  font-family: "Handjet", sans-serif;
+
+  font-size: 20px;
+
+  cursor: pointer;
+}
+
+
+.signoff-btn:hover {
+  background: white;
+}

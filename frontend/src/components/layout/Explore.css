@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist+Pixel:ELSH@9&family=Handjet:wght,ELSH@100..900,2&display=swap');
+
+
+.explore-page {
+  min-height: calc(100vh - 80px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* Terminal */
+
+.terminal-line-span {
+  color: #7fffff;
+  font-weight: bold;
+}
+
+.page2-terminal {
+  position: relative;
+
+  width: 545px;
+  min-height: 290px;
+
+  background: #000;
+
+  border: 1px solid #aaa;
+  border-radius: 5px;
+
+  padding: 22px 10px;
+
+  color: white;
+
+  font-family: "Handjet", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+
+  font-variation-settings:
+    "ELGR" 1,
+    "ELSH" 2;
+
+  font-size: 20px;
+}
+
+
+/* Terminal lines */
+
+.page2-terminal .terminal-line {
+  margin: 0 0 20px 0;
+
+  font-family: "Handjet", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+
+  font-variation-settings:
+    "ELGR" 1,
+    "ELSH" 2;
+}
+
+
+/* >>> */
+
+.page2-terminal .terminal-line span {
+  color: #7fffff;
+  font-weight: bold;
+}
+
+
+/* Main message */
+
+.system-message {
+  margin: 0;
+  padding-right: 5px;
+
+  line-height: 1.35;
+
+  font-family: "Handjet", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+
+  font-variation-settings:
+    "ELGR" 1,
+    "ELSH" 2;
+}
+
+
+/* O2 / H2O / CH4 */
+
+.system-message strong {
+  font-weight: 600;
+}
+
+
+/* Proceed button */
+
+.page2-terminal .proceed-btn {
+  position: absolute;
+
+  right: 8px;
+  bottom: 10px;
+
+  padding: 7px 22px;
+
+  background: #b8ffff;
+
+  border: none;
+
+  color: #111;
+
+  font-family: "Handjet", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+
+  font-variation-settings:
+    "ELGR" 1,
+    "ELSH" 2;
+
+  font-size: 16px;
+
+  cursor: pointer;
+}
+
+
+.page2-terminal .proceed-btn:hover {
+  background: white;
+}
