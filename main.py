@@ -1,5 +1,9 @@
 import pandas as pd
 import xgboost as xgb
+from transformers import pipeline
+
+
+text_ai = pipeline("text-generation",model="As")
 
 
 # ============================================================
@@ -124,3 +128,4 @@ for kepid, star_data in df.groupby("kepid"):
             print(
                 f"{class_name}: {probability:.2%}"
             )
+
