@@ -4,9 +4,9 @@ from transformers import pipeline, BitsAndBytesConfig
 import torch
 
 
-==========================================
-1. Load AstroSage
-==========================================
+#==========================================
+#1. Load AstroSage
+#==========================================
 
 quant_config = BitsAndBytesConfig(
     load_in_4bit=True,
