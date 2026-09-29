@@ -68,26 +68,6 @@ df = pd.read_csv("Exo_predict.csv")
 
 
 
-# ============================================================
-# 2. Features used by XGBoost
-# ============================================================
-
-features = [
-    "koi_period",
-    "koi_impact",
-    "koi_duration",
-    "koi_depth",
-    "koi_prad",
-    "koi_teq",
-    "koi_insol",
-    "koi_model_snr",
-    "koi_steff",
-    "koi_slogg",
-    "koi_srad",
-    "koi_kepmag",
-]
-
-
 def get_random_kpids(filename):
     confirmed = []
     false_positive = []
