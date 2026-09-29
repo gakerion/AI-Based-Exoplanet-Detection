@@ -67,5 +67,3 @@ print("Model loaded.")
 df = pd.read_csv("Exo_predict.csv")
 
 
-random_ids = helper.get_random_kpids("exo_predict.csv")
-print(random_ids)
