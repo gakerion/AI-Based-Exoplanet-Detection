@@ -1,16 +1,24 @@
 import csv
 import random
-
-from test import lookup_star
-import main
 import helper
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/explore")
 def getData():
+    print("Running HI")
     helper.get_random_kpids = lambda filename: tuple(
         random.sample(
             [
@@ -21,4 +29,4 @@ def getData():
             5,
         )
     )
-    return {"kpids": helper.get_random_kpids("kepler_data.csv")}
+    return [helper.get_random_kpids("exo_predict.csv")]
