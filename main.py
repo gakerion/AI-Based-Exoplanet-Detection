@@ -6,7 +6,7 @@ import xgboost as xgb
 # 1. Load dataset
 # ============================================================
 
-df = pd.read_csv("cumulative_copy.csv")
+df = pd.read_csv("data.csv")
 
 
 # ============================================================

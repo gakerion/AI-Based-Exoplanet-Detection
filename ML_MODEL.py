@@ -9,7 +9,7 @@ from sklearn.metrics import classification_report, confusion_matrix
 # 1. Load dataset
 # -----------------------------------
 
-df = pd.read_csv("cumulative_copy.csv")
+df = pd.read_csv("train_data.csv")
 
 # -----------------------------------
 # 2. Features
