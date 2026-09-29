@@ -3,7 +3,9 @@ import pandas as pd
 import io
 import torch
 
+import csv
 
+import random
 
 # ============================================================
 # 2. NASA EXOPLANET ARCHIVE
@@ -329,22 +331,42 @@ def get_star_info(kic_id):
     )
 
 
-while True:
-    user_input = input("\nKIC ID: ").strip()
 
-    if user_input.lower() == "exit":
-        print("Exiting AstroSage...")
-        break
 
-    try:
-        kic_id = int(user_input)
-    except ValueError:
-        print("Please enter a valid numeric KIC ID.")
-        continue
+def get_random_kpids(filename):
+    confirmed = []
+    false_positive = []
 
-    answer = get_star_info(kic_id)
+    with open(filename, "r") as file:
+        reader = csv.DictReader(file)
 
-    print("\nAstroSage:")
-    print(answer)
-    print("")
-    print(lookup_star(kic_id))
+        for row in reader:
+            data = (row["kepid"], row["koi_disposition"])
+
+            if row["koi_disposition"] == "CONFIRMED":
+                confirmed.append(data)
+
+            elif row["koi_disposition"] == "FALSE POSITIVE":
+                false_positive.append(data)
+
+    # Make sure we have at least one of each
+    selected = [
+        random.choice(confirmed),
+        random.choice(false_positive)
+    ]
+
+    # Combine the two categories
+    remaining = confirmed + false_positive
+
+    # Remove the two already selected
+    remaining.remove(selected[0])
+    remaining.remove(selected[1])
+
+    # Pick 3 more
+    selected += random.sample(remaining, 3)
+
+    # Shuffle the result
+    random.shuffle(selected)
+
+    return selected
+

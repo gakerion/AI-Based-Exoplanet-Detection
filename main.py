@@ -1,11 +1,8 @@
-import csv
-import random
-
 import helper
 
 
 import pandas as pd
-import xgboost as xgb
+
 import torch
 from transformers import (
     AutoTokenizer,
@@ -71,6 +68,4 @@ df = pd.read_csv("Exo_predict.csv")
 
 
 random_ids = helper.get_random_kpids("exo_predict.csv")
-ids = []
-for id in random_ids:
-    ids.append(int(random_ids[0]))
+print(random_ids)
