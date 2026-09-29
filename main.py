@@ -89,11 +89,7 @@ features = [
 # 3. Load trained XGBoost model
 # ============================================================
 
-model = xgb.XGBClassifier()
 
-model.load_model("exoplanet_xgboost.json")
-
-print("XGBoost model loaded successfully!")
 
 
 # ============================================================
@@ -107,18 +103,13 @@ print("XGBoost model loaded successfully!")
 # 1 = CONFIRMED
 # 2 = FALSE POSITIVE
 
-class_names = [
-    "CANDIDATE",
-    "CONFIRMED",
-    "FALSE POSITIVE"
-]
+
 
 
 # ============================================================
 # 5. Analyze each star
 # ============================================================
 
-#for kepid, star_data in df.groupby("kepid"):
 
     print("\n" + "=" * 60)
     print(f"STAR: {kepid}")
