@@ -79,6 +79,9 @@ print(f"\nLoaded {len(df)} candidates.")
 # ============================================================
 # 6. FUNCTION TO CALCULATE LABEL PROBABILITIES
 # ============================================================
+prompt = f"""
+star id is 2831055 , return all the parameters and the composition of the planet
+"""
 
 def classify_candidate(prompt):
 
@@ -218,170 +221,154 @@ def classify_candidate(prompt):
 
 results = []
 
-for index, row in df.iterrows():
+# for index, row in df.iterrows():
 
-    print("\n" + "=" * 70)
-    print(f"CANDIDATE {index + 1} / {len(df)}")
-    print(f"KEPID: {row['kepid']}")
-    print(f"KOI:   {row['kepoi_name']}")
-    print("=" * 70)
+#     print("\n" + "=" * 70)
+#     print(f"CANDIDATE {index + 1} / {len(df)}")
+#     print(f"KEPID: {row['kepid']}")
+#     print(f"KOI:   {row['kepoi_name']}")
+#     print("=" * 70)
 
-    # --------------------------------------------------------
-    # Create astronomical description
-    #
-    # IMPORTANT:
-    # koi_disposition is NOT included here.
-    # --------------------------------------------------------
+#     # --------------------------------------------------------
+#     # Create astronomical description
+#     #
+#     # IMPORTANT:
+#     # koi_disposition is NOT included here.
+#     # --------------------------------------------------------
 
-    prompt = f"""
-You are analyzing a Kepler astronomical transit candidate.
+#     prompt = f"""
+# star id is 2831055 , return all the parameters and the composition of the planet
+# """
 
-Use the following observed properties to assess the candidate.
+#     # --------------------------------------------------------
+#     # Get probabilities
+#     # --------------------------------------------------------
 
-Orbital period: {row['koi_period']:.4f} days
-Transit duration: {row['koi_duration']:.4f} hours
-Transit depth: {row['koi_depth']:.4f} ppm
-Planet radius: {row['koi_prad']:.4f} Earth radii
-Stellar radius: {row['koi_srad']:.4f} Solar radii
-Impact parameter: {row['koi_impact']:.4f}
-Transit signal-to-noise ratio: {row['koi_model_snr']:.4f}
-Equilibrium temperature: {row['koi_teq']:.4f} K
-Stellar effective temperature: {row['koi_steff']:.2f} K
-Stellar surface gravity: {row['koi_slogg']:.4f}
+#     probabilities = classify_candidate(prompt)
 
-Which classification best describes this candidate?
+#     # --------------------------------------------------------
+#     # Find highest probability
+#     # --------------------------------------------------------
 
-Answer:
-"""
+#     prediction = max(
+#         probabilities,
+#         key=probabilities.get
+#     )
 
-    # --------------------------------------------------------
-    # Get probabilities
-    # --------------------------------------------------------
+#     # --------------------------------------------------------
+#     # Actual ground truth
+#     # --------------------------------------------------------
 
-    probabilities = classify_candidate(prompt)
+#     actual = str(
+#         row["koi_disposition"]
+#     ).strip().upper()
 
-    # --------------------------------------------------------
-    # Find highest probability
-    # --------------------------------------------------------
+#     # Convert dataset label to our label format
+#     if actual == "CONFIRMED":
+#         actual_label = "confirmed exoplanet"
 
-    prediction = max(
-        probabilities,
-        key=probabilities.get
-    )
+#     elif actual == "CANDIDATE":
+#         actual_label = "exoplanet candidate"
 
-    # --------------------------------------------------------
-    # Actual ground truth
-    # --------------------------------------------------------
+#     elif actual == "FALSE POSITIVE":
+#         actual_label = "false positive"
 
-    actual = str(
-        row["koi_disposition"]
-    ).strip().upper()
+#     else:
+#         actual_label = actual
 
-    # Convert dataset label to our label format
-    if actual == "CONFIRMED":
-        actual_label = "confirmed exoplanet"
+#     # --------------------------------------------------------
+#     # Print probabilities
+#     # --------------------------------------------------------
 
-    elif actual == "CANDIDATE":
-        actual_label = "exoplanet candidate"
+#     print("\nAI probabilities:")
 
-    elif actual == "FALSE POSITIVE":
-        actual_label = "false positive"
+#     for label, probability in probabilities.items():
 
-    else:
-        actual_label = actual
+#         print(
+#             f"{label:<25} "
+#             f"{probability:6.2f}%"
+#         )
 
-    # --------------------------------------------------------
-    # Print probabilities
-    # --------------------------------------------------------
+#     print("\nAI prediction:")
+#     print(prediction)
 
-    print("\nAI probabilities:")
+#     print("\nActual dataset classification:")
+#     print(actual_label)
 
-    for label, probability in probabilities.items():
+#     # --------------------------------------------------------
+#     # Check prediction
+#     # --------------------------------------------------------
 
-        print(
-            f"{label:<25} "
-            f"{probability:6.2f}%"
-        )
+#     correct = (
+#         prediction.lower()
+#         == actual_label.lower()
+#     )
 
-    print("\nAI prediction:")
-    print(prediction)
+#     print("\nResult:")
 
-    print("\nActual dataset classification:")
-    print(actual_label)
+#     if correct:
+#         print("CORRECT")
+#     else:
+#         print("INCORRECT")
 
-    # --------------------------------------------------------
-    # Check prediction
-    # --------------------------------------------------------
+#     # --------------------------------------------------------
+#     # Save result
+#     # --------------------------------------------------------
 
-    correct = (
-        prediction.lower()
-        == actual_label.lower()
-    )
+#     results.append({
+#         "rowid": row["rowid"],
+#         "kepid": row["kepid"],
+#         "kepoi_name": row["kepoi_name"],
 
-    print("\nResult:")
+#         "AI_prediction": prediction,
 
-    if correct:
-        print("CORRECT")
-    else:
-        print("INCORRECT")
+#         "confirmed_probability":
+#             probabilities["confirmed exoplanet"],
 
-    # --------------------------------------------------------
-    # Save result
-    # --------------------------------------------------------
+#         "candidate_probability":
+#             probabilities["exoplanet candidate"],
 
-    results.append({
-        "rowid": row["rowid"],
-        "kepid": row["kepid"],
-        "kepoi_name": row["kepoi_name"],
+#         "false_positive_probability":
+#             probabilities["false positive"],
 
-        "AI_prediction": prediction,
+#         "actual_classification":
+#             actual_label,
 
-        "confirmed_probability":
-            probabilities["confirmed exoplanet"],
-
-        "candidate_probability":
-            probabilities["exoplanet candidate"],
-
-        "false_positive_probability":
-            probabilities["false positive"],
-
-        "actual_classification":
-            actual_label,
-
-        "correct":
-            correct
-    })
+#         "correct":
+#             correct
+#     })
 
 
-# ============================================================
-# 8. SAVE RESULTS
-# ============================================================
+# # ============================================================
+# # 8. SAVE RESULTS
+# # ============================================================
 
-results_df = pd.DataFrame(results)
+# results_df = pd.DataFrame(results)
 
-results_df.to_csv(
-    "astrosage_predictions.csv",
-    index=False
-)
+# results_df.to_csv(
+#     "astrosage_predictions.csv",
+#     index=False
+# )
 
-print("\n" + "=" * 70)
-print("FINISHED")
-print("=" * 70)
+# print("\n" + "=" * 70)
+# print("FINISHED")
+# print("=" * 70)
 
-# ============================================================
-# 9. OVERALL ACCURACY
-# ============================================================
+# # ============================================================
+# # 9. OVERALL ACCURACY
+# # ============================================================
 
-accuracy = (
-    results_df["correct"].mean()
-    * 100
-)
+# accuracy = (
+#     results_df["correct"].mean()
+#     * 100
+# )
 
-print(
-    f"\nAccuracy: {accuracy:.2f}%"
-)
+# print(
+#     f"\nAccuracy: {accuracy:.2f}%"
+# )
 
-print(
-    "\nResults saved to: "
-    "astrosage_predictions.csv"
-)
+# print(
+#     "\nResults saved to: "
+#     "astrosage_predictions.csv"
+# )
+
