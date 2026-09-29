@@ -1,10 +1,8 @@
-<<<<<<< HEAD
 import csv
 import random
-=======
-import pandas as pd
-import torch
->>>>>>> experimental
+
+import helper
+
 
 import pandas as pd
 import xgboost as xgb
@@ -21,23 +19,6 @@ MODEL_NAME = "AstroMLab/AstroSage-8B"
 
 
 # ============================================================
-<<<<<<< HEAD
-=======
-# 1. SETTINGS
-# ============================================================
-
-MODEL_NAME = "AstroMLab/AstroSage-8B"
-CSV_FILE = "cumulative_copy.csv"
-
-LABELS = [
-    "confirmed exoplanet",
-    "exoplanet candidate",
-    "false positive"
-]
-
-
-# ============================================================
->>>>>>> experimental
 # 2. 4-BIT QUANTIZATION
 # ============================================================
 
@@ -69,18 +50,17 @@ if tokenizer.pad_token is None:
 
 print("Loading AstroSage-8B in 4-bit...")
 
-model = AutoModelForCausalLM.from_pretrained(
-    MODEL_NAME,
-    quantization_config=quant_config,
-    device_map="auto",
-    torch_dtype=torch.float16,
-    low_cpu_mem_usage=True
-)
+# model = AutoModelForCausalLM.from_pretrained(
+#     MODEL_NAME,
+#     quantization_config=quant_config,
+#     device_map="auto",
+#     torch_dtype=torch.float16,
+#     low_cpu_mem_usage=True
+# )
 
-model.eval()
+# model.eval()
 
 print("Model loaded.")
-<<<<<<< HEAD
 
 
 # ============================================================
@@ -90,43 +70,7 @@ print("Model loaded.")
 df = pd.read_csv("Exo_predict.csv")
 
 
-
-def get_random_kpids(filename):
-    confirmed = []
-    false_positive = []
-
-    with open(filename, "r") as file:
-        reader = csv.DictReader(file)
-
-        for row in reader:
-            data = (row["kepid"], row["koi_disposition"])
-
-            if row["koi_disposition"] == "CONFIRMED":
-                confirmed.append(data)
-
-            elif row["koi_disposition"] == "FALSE POSITIVE":
-                false_positive.append(data)
-
-    # Make sure we have at least one of each
-    selected = [
-        random.choice(confirmed),
-        random.choice(false_positive)
-    ]
-
-    # Combine the two categories
-    remaining = confirmed + false_positive
-
-    # Remove the two already selected
-    remaining.remove(selected[0])
-    remaining.remove(selected[1])
-
-    # Pick 3 more
-    selected += random.sample(remaining, 3)
-
-    # Shuffle the result
-    random.shuffle(selected)
-
-    return selected
-=======
-print("Device map:")
->>>>>>> experimental
+random_ids = helper.get_random_kpids("exo_predict.csv")
+ids = []
+for id in random_ids:
+    ids.append(int(random_ids[0]))
