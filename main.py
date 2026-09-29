@@ -79,9 +79,6 @@ print(f"\nLoaded {len(df)} candidates.")
 # ============================================================
 # 6. FUNCTION TO CALCULATE LABEL PROBABILITIES
 # ============================================================
-prompt = f"""
-star id is 2831055 , return all the parameters and the composition of the planet
-"""
 
 def classify_candidate(prompt):
 
@@ -372,3 +369,6 @@ results = []
 #     "astrosage_predictions.csv"
 # )
 
+prompt = f"""
+star id is 2831055 , return all the parameters and the composition of the planet
+"""

@@ -4,9 +4,9 @@ from transformers import pipeline, BitsAndBytesConfig
 import torch
 
 
-# ==========================================
-# 1. Load AstroSage
-# ==========================================
+==========================================
+1. Load AstroSage
+==========================================
 
 quant_config = BitsAndBytesConfig(
     load_in_4bit=True,
@@ -16,7 +16,7 @@ quant_config = BitsAndBytesConfig(
 )
 
 model_name = "AstroMLab/AstroSage-8B"
-context = "Return all the datapoints of the given star id in a python dictionary. make sure the keys are the datapoints and the values are values. dont question me , just give the values you know ."
+context = "Return the following info from the KIC ID given to you: Oxygen, Metallicity, Radius, Distance. If Oxygen, Metallicity, Radius, Distance is not available mention 'Unknown'"
 
 generator = pipeline(
     "text-generation",
@@ -48,7 +48,7 @@ AstroSage:
 
     result = generator(
         prompt,
-        max_new_tokens=1000,
+        max_new_tokens=300,
         temperature=0.7,
         do_sample=True
     )
