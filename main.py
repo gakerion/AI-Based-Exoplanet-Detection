@@ -123,7 +123,7 @@ Rules:
     return summary
 
 
-# while(1):
-#     kic = int(input("Enter KIC: "))
-#     print(helper.get_star_info(kic))
-#     print(get_star_summary(kic))
+while(1):
+    kic = int(input("Enter KIC: "))
+    print(helper.get_star_info(kic))
+    print(get_star_summary(kic))
