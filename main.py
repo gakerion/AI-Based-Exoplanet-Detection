@@ -1,8 +1,5 @@
 import helper
 
-
-import pandas as pd
-
 import torch
 from transformers import (
     AutoTokenizer,
@@ -13,63 +10,79 @@ from transformers import (
 
 MODEL_NAME = "AstroMLab/AstroSage-8B"
 
+# Global variables
+model = None
+tokenizer = None
 
 
 # ============================================================
-# 2. 8-BIT QUANTIZATION
+# INITIALIZE ASTROSAGE
 # ============================================================
 
-quant_config = BitsAndBytesConfig(
-    load_in_8bit=True
-)
-# quant_config = BitsAndBytesConfig(
-#     load_in_4bit=True,
-#     bnb_4bit_quant_type="nf4",
-#     bnb_4bit_compute_dtype=torch.float16,
-#     bnb_4bit_use_double_quant=True
-# )
+def initialize_astrosage():
+
+    global model, tokenizer
+
+    # Don't load the 8B model again if it is already loaded
+    if model is not None and tokenizer is not None:
+        print("AstroSage already loaded.")
+        return
+
+    print("Loading AstroSage...")
+
+    # -----------------------------
+    # 1. 4-bit quantization
+    # -----------------------------
+
+    quant_config = BitsAndBytesConfig(
+        load_in_4bit=True,
+        bnb_4bit_quant_type="nf4",
+        bnb_4bit_compute_dtype=torch.float16,
+        bnb_4bit_use_double_quant=True
+    )
+
+    # -----------------------------
+    # 2. Load tokenizer
+    # -----------------------------
+
+    print("Loading tokenizer...")
+
+    tokenizer = AutoTokenizer.from_pretrained(
+        MODEL_NAME
+    )
+
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+
+    # -----------------------------
+    # 3. Load model
+    # -----------------------------
+
+    print("Loading AstroSage-8B in 4-bit...")
+
+    model = AutoModelForCausalLM.from_pretrained(
+        MODEL_NAME,
+        quantization_config=quant_config,
+        device_map="auto",
+        torch_dtype=torch.float16,
+        low_cpu_mem_usage=True
+    )
+
+    model.eval()
+
+    print("AstroSage loaded.")
 
 
 # ============================================================
-# 3. LOAD TOKENIZER
-# ============================================================
-
-print("Loading tokenizer...")
-
-tokenizer = AutoTokenizer.from_pretrained(
-    MODEL_NAME
-)
-
-if tokenizer.pad_token is None:
-    tokenizer.pad_token = tokenizer.eos_token
-
-
-# ============================================================
-# 4. LOAD MODEL
-# ============================================================
-
-print("Loading AstroSage-8B in 4-bit...")
-
-model = AutoModelForCausalLM.from_pretrained(
-    MODEL_NAME,
-    quantization_config=quant_config,
-    device_map="auto",
-    torch_dtype=torch.float16,
-    low_cpu_mem_usage=True
-)
-
-model.eval()
-
-print("Model loaded.")
-
-
-# ============================================================
-# 1. Load dataset
+# GENERATE STAR SUMMARY
 # ============================================================
 
 def get_star_summary(kic_id):
 
-    # Get all catalog data for this KIC ID
+    # Make sure model is initialized
+    initialize_astrosage()
+
+    # Get catalog data
     star_data = helper.get_star_info(kic_id)
 
     prompt = f"""
@@ -92,18 +105,19 @@ Rules:
 - STOP after the first paragraph.
 """
 
-    # Tokenize prompt
+    # Tokenize
     inputs = tokenizer(
         prompt,
         return_tensors="pt"
     )
 
+    # Move input to model device
     inputs = {
         key: value.to(model.device)
         for key, value in inputs.items()
     }
 
-    # Generate AstroSage response
+    # Generate
     with torch.no_grad():
 
         outputs = model.generate(
@@ -113,20 +127,15 @@ Rules:
             pad_token_id=tokenizer.eos_token_id
         )
 
-    # Remove prompt from generated output
+    # Remove prompt
     generated_tokens = outputs[0][
         inputs["input_ids"].shape[1]:
     ]
 
+    # Decode
     summary = tokenizer.decode(
         generated_tokens,
         skip_special_tokens=True
     ).strip()
 
     return summary
-
-
-# while(1):
-#     kic = int(input("Enter KIC: "))
-#     print(helper.get_star_info(kic))
-#     print(get_star_summary(kic))

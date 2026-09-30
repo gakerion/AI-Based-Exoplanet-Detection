@@ -26,9 +26,10 @@ function PlanetSelection() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:8000/planetSelection", {
-  method: "GET"
-});
+        const res = await fetch("http://127.0.0.1:8000/planetSelection", {
+          method: "GET"
+        });
+
         if (!res.ok) {
           throw new Error(`HTTP error: ${res.status}`);
         }
