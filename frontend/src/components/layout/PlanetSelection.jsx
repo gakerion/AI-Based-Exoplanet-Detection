@@ -8,74 +8,51 @@ import orangePlanet from "../../assets/orangePlanet.png";
 import redPlanet from "../../assets/redPlanet.png";
 import sunPlanet from "../../assets/sunPlanet.png";
 
-
-
-
 function PlanetSelection() {
   const navigate = useNavigate();
-  const [planetList, setplanetList] = useState()
+
   const { planet, setPlanet } = useOutletContext();
 
+  const [planetList, setPlanetList] = useState([]);
 
-  const planets = [
-    {
-      id: "K001",
-      name: "Kepler-1b",
-      image: earth
-    },
-    {
-      id: "K002",
-      name: "Kepler-2b",
-      image: bluePlanet
-    },
-    {
-      id: "K003",
-      name: "Kepler-3b",
-      image: orangePlanet
-    },
-    {
-      id: "K004",
-      name: "Kepler-4b",
-      image: redPlanet
-    },
-    {
-      id: "K005",
-      name: "Kepler-5b",
-      image: sunPlanet
-    }
+  const planetImages = [
+    earth,
+    bluePlanet,
+    orangePlanet,
+    redPlanet,
+    sunPlanet
   ];
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("/explore", {
-        "method": "GET"
-      })
-      const data = await res.json()
-      setplanetList(data)
+      try {
+        const res = await fetch("/planetSelection", {
+          method: "GET"
+        });
 
-    }
+        if (!res.ok) {
+          throw new Error(`HTTP error: ${res.status}`);
+        }
 
-    fetchData()
+        const data = await res.json();
 
-  }, [])
+        console.log("Planet list:", data);
 
-  const handleProceed = async () => {
+        // Backend returns: [["KIC1", "KIC2", ...]]
+        setPlanetList(data[0]);
+
+      } catch (error) {
+        console.error("Error fetching planets:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleProceed = () => {
     if (!planet) return;
 
     console.log("Selected planet:", planet);
-    setPlanet(planet)
-
-
-    // const res = await fetch("/explore", {
-    //   "method": "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   "body": JSON.stringify(planet.id)
-    // })
-    // const data = await res.json()
-    // setplanetList(data)
-
 
     navigate("/planetDetails");
   };
@@ -85,32 +62,42 @@ function PlanetSelection() {
 
       <div className="planet-grid">
 
-        {planets.map((planet) => (
-          <div
-            key={planet.id}
-            className={`planet-card ${planet?.id === planet.id
-                ? "selected"
-                : ""
-              }`}
-            onClick={() => setPlanet(planet)}
-          >
+        {planetList.map((id, index) => {
 
-            <img
-              src={planet.image}
-              alt={planet.name}
-              className="planet-image"
-            />
+          const isSelected = planet?.id === id;
 
-            <p className="planet-id">
-              Star ID: {planet.id}
-            </p>
+          return (
+            <div
+              key={id}
+              className={`planet-card ${isSelected ? "selected" : ""}`}
+              onClick={() =>
+                setPlanet({
+                  id: id,
+                  name: `Kepler-${id}b`,
+                  image: planetImages[index % planetImages.length],
+                  story: "",
+                  element: {}
+                })
+              }
+            >
 
-            <p className="planet-name">
-              Name: {planet.name}
-            </p>
+              <img
+                src={planetImages[index % planetImages.length]}
+                alt={`Planet ${id}`}
+                className="planet-image"
+              />
 
-          </div>
-        ))}
+              <p className="planet-id">
+                Star ID: {id}
+              </p>
+
+              <p className="planet-name">
+                Name: Kepler-{id}b
+              </p>
+
+            </div>
+          );
+        })}
 
       </div>
 
