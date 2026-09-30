@@ -22,7 +22,7 @@ Our project combines machine learning with immersive UI / UX and web interface t
 
 * **Frontend & UI:** React, Vite, HTML/CSS
 * **Backend & AI:** Python, FastAPI, Data Analysis Libraries
-* **LLM for Astronomy:** Astrosage 8B model, NASA Exoplanet Archive
+* **LLM & Data for Astronomy:** Astrosage 8B model, NASA Exoplanet Archive
 
 ---
 
