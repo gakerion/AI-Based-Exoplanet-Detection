@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
+import ActionCard from './ActionCard'
 import mainbg from "../assets/mainbg.png";
 
 function AppLayout() {
@@ -12,6 +13,7 @@ function AppLayout() {
       className="app"
       style={{ backgroundImage: `url(${mainbg})` }}
     >
+      <ActionCard />
       <Navbar />
 
       <main>

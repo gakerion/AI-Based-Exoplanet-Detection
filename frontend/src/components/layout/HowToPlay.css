@@ -1,0 +1,271 @@
+.how-to-play-page {
+  min-height: 100vh;
+  width: 100%;
+
+  background-image: url("../../assets/longBg.png");
+  background-size: 100% auto;
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-color: #03070d;
+
+  display: flex;
+  justify-content: center;
+
+  padding: 100px 20px 80px;
+
+  box-sizing: border-box;
+
+  font-family: "Handjet", monospace;
+  color: white;
+}
+
+
+/* =========================
+   CONTAINER
+========================= */
+
+.how-to-play-container {
+  width: 100%;
+  max-width: 900px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 35px;
+}
+
+
+/* =========================
+   MAIN TERMINAL CARD
+========================= */
+
+.terminal-card {
+  background-color: #000;
+
+  border: 1px solid #555;
+  border-radius: 8px;
+
+  padding: 30px;
+
+  box-sizing: border-box;
+
+  font-size: 24px;
+  line-height: 1.25;
+}
+
+
+/* =========================
+   PROMPT
+========================= */
+
+.prompt {
+  color: white;
+
+  font-size: 26px;
+  font-weight: 600;
+
+  margin-bottom: 30px;
+}
+
+
+/* =========================
+   TERMINAL BODY
+========================= */
+
+.terminal-body {
+  font-size: 23px;
+  line-height: 1.35;
+}
+
+.terminal-body p {
+  margin: 0 0 28px;
+}
+
+.terminal-body p:last-child {
+  margin-bottom: 0;
+}
+
+
+/* Highlighted words */
+
+.highlight {
+  color: #a6fffb;
+}
+
+
+/* =========================
+   END PROMPT
+========================= */
+
+.prompt-end {
+  margin-top: 30px;
+
+  color: #a6fffb;
+
+  font-size: 25px;
+}
+
+
+/* =========================
+   LOGO
+========================= */
+
+.logo-container {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  padding: 10px 0;
+}
+
+.dedsec-logo {
+  width: 120px;
+  height: auto;
+
+  display: block;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer-card {
+  background-color: #000;
+
+  border: 1px solid #555;
+  border-radius: 8px;
+
+  padding: 25px 30px;
+
+  box-sizing: border-box;
+
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+.line {
+  margin-bottom: 15px;
+}
+
+.line:last-child {
+  margin-bottom: 0;
+}
+
+
+/* >>> */
+
+.arrow {
+  color: #a6fffb;
+
+  margin-right: 5px;
+}
+
+
+/* Email links */
+
+.footer-card a {
+  color: #a6fffb;
+
+  text-decoration: none;
+}
+
+.footer-card a:hover {
+  text-decoration: underline;
+}
+
+
+/* Copyright */
+
+.footer-highlight {
+  color: #a6fffb;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 800px) {
+
+  .how-to-play-page {
+    padding: 80px 20px 60px;
+  }
+
+  .terminal-card {
+    padding: 25px;
+
+    font-size: 22px;
+  }
+
+  .prompt {
+    font-size: 24px;
+  }
+
+  .terminal-body {
+    font-size: 21px;
+  }
+
+  .footer-card {
+    font-size: 20px;
+
+    padding: 25px;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 500px) {
+
+  .how-to-play-page {
+    padding: 60px 15px 40px;
+  }
+
+  .how-to-play-container {
+    gap: 25px;
+  }
+
+  .terminal-card {
+    padding: 20px;
+
+    font-size: 19px;
+  }
+
+  .prompt {
+    font-size: 21px;
+
+    margin-bottom: 25px;
+  }
+
+  .terminal-body {
+    font-size: 18px;
+
+    line-height: 1.3;
+  }
+
+  .terminal-body p {
+    margin-bottom: 22px;
+  }
+
+  .prompt-end {
+    font-size: 21px;
+
+    margin-top: 25px;
+  }
+
+  .footer-card {
+    padding: 20px;
+
+    font-size: 18px;
+  }
+
+  .dedsec-logo {
+    width: 90px;
+  }
+
+}

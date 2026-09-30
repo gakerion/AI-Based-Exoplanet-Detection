@@ -1,12 +1,8 @@
+import { useOutletContext } from "react-router-dom";
 import "./MissionResult.css";
-import earth from "../../assets/earth.png";
 
 function MissionResult() {
-  const planet = {
-    id: "XXXXXXXX",
-    name: "Kepler 1b, XXXXX",
-    image: earth,
-  };
+  const { planet } = useOutletContext();
 
   const failedElements = ["X", "Y", "Z"];
 
@@ -26,8 +22,13 @@ function MissionResult() {
             />
           </div>
 
-          <h3>Star ID: {planet.id}</h3>
-          <p>Name: {planet.name}</p>
+          <h3>
+            Star ID: {planet.id}
+          </h3>
+
+          <p>
+            Name: {planet.name}
+          </p>
 
         </div>
 

@@ -1,0 +1,212 @@
+.about-page {
+  min-height: 100vh;
+  width: 100%;
+
+  background-image: url("../../assets/longBg.png");
+  background-size: 100% auto;
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-color: #03070d;
+
+  display: flex;
+  justify-content: center;
+
+  padding: 100px 20px 80px;
+
+  box-sizing: border-box;
+
+  font-family: "Handjet", monospace;
+  color: white;
+}
+
+
+/* =========================
+   CONTAINER
+========================= */
+
+.about-container {
+  width: 100%;
+  max-width: 900px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 35px;
+}
+
+
+/* =========================
+   MAIN TERMINAL
+========================= */
+
+.terminal-card {
+  background-color: #000;
+
+  border: 1px solid #555;
+  border-radius: 8px;
+
+  padding: 30px;
+
+  box-sizing: border-box;
+
+  font-size: 24px;
+  line-height: 1.25;
+}
+
+
+/* =========================
+   TERMINAL LINES
+========================= */
+
+.terminal-line {
+  margin-bottom: 22px;
+}
+
+.terminal-line:last-child {
+  margin-bottom: 0;
+}
+
+
+/* >>> */
+
+.arrow {
+  color: #a6fffb;
+
+  margin-right: 5px;
+}
+
+
+/* Bold */
+
+.bold-line {
+  font-weight: 700;
+}
+
+
+/* =========================
+   LOGO
+========================= */
+
+.logo-container {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  padding: 10px 0;
+}
+
+.dedsec-logo {
+  width: 120px;
+  height: auto;
+
+  display: block;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer-card {
+  background-color: #000;
+
+  border: 1px solid #555;
+  border-radius: 8px;
+
+  padding: 25px 30px;
+
+  box-sizing: border-box;
+
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+
+/* Footer lines */
+
+.line {
+  margin-bottom: 15px;
+}
+
+.line:last-child {
+  margin-bottom: 0;
+}
+
+
+/* Email links */
+
+.footer-card a {
+  color: #a6fffb;
+
+  text-decoration: none;
+}
+
+.footer-card a:hover {
+  text-decoration: underline;
+}
+
+
+/* Copyright */
+
+.colored {
+  color: #a6fffb;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 800px) {
+
+  .about-page {
+    padding: 80px 20px 60px;
+  }
+
+  .terminal-card {
+    padding: 25px;
+
+    font-size: 22px;
+  }
+
+  .footer-card {
+    padding: 25px;
+
+    font-size: 20px;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 500px) {
+
+  .about-page {
+    padding: 60px 15px 40px;
+  }
+
+  .about-container {
+    gap: 25px;
+  }
+
+  .terminal-card {
+    padding: 20px;
+
+    font-size: 19px;
+  }
+
+  .footer-card {
+    padding: 20px;
+
+    font-size: 18px;
+  }
+
+  .dedsec-logo {
+    width: 90px;
+  }
+
+}

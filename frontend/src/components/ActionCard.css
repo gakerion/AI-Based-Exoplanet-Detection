@@ -1,0 +1,59 @@
+/* Action Required Container Box */
+.action-card {
+    position: fixed;
+    top: 50%;
+    left: 30px;
+    transform: translateY(-50%);
+    background-color: #000000;
+    border: 1px solid #555555;
+    border-radius: 8px;
+    padding: 18px 16px 24px 18px ;
+    width: 165px;
+    font-family: 'Handjet', monospace;
+    box-sizing: border-box;
+
+}
+
+/* Heading Alignment */
+.action-title {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 16px 0;
+    padding: 0;
+    line-height: 1;
+}
+
+/* List Layout */
+.action-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Item Alignment (Centers bullet with text) */
+.action-item {
+    display: flex;
+    align-items: center; 
+    gap: 10px;
+}
+
+/* Glowing Bullet Dot */
+.status-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #A6FFFB;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 5px #A6FFFB, 0 0 10px rgba(166, 255, 251, 0.85);
+}
+
+/* List Text (Reduced to match bullet height) */
+.action-item .text {
+    color: #e0e0e0;
+    font-size: 18px;
+    line-height: 1;
+}

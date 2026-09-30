@@ -7,21 +7,6 @@ function Explore() {
   const [data, setData] = useState("")
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch("http://127.0.0.1:8000/explore",{
-        "method":"GET"
-      })
-      const data = await res.json()
-      console.log(data)
-      setData(data)
-
-    }
-
-    fetchData()  
-  
-  }, [])
-  
 
   return (
     <div className="explore-page">
