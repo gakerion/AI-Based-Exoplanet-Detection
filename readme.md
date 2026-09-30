@@ -28,7 +28,7 @@ Our project combines machine learning with immersive UI / UX and web interface t
 
 ## ⚡ Quickstart (Run Locally)
 
-### 1. Clone the repository
+### Type the below one by one:
 ```bash
 git clone [https://github.com/gakerion/AI-Based-Exoplanet-Detection.git](https://github.com/gakerion/AI-Based-Exoplanet-Detection.git)
 cd AI-Based-Exoplanet-Detection 
