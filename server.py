@@ -1,5 +1,7 @@
 import csv
 import random
+import main
+import helper
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,6 +15,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+text = main.get_star_summary(str(id))
 
 
 @app.get("/planetSelection")
@@ -32,3 +36,14 @@ def getData():
     print("Selected KIC IDs:", kpids)
 
     return [kpids]
+
+
+@app.post("/planetDetails")
+def get_planet(id: int):
+    
+    print("HELLOOO")
+    return{
+        "kic_id": id,
+        "star_data":helper.lookup_star(id),
+        "composition_text":text
+    }
