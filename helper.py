@@ -4,7 +4,7 @@ import io
 import torch
 
 import csv
-
+import math
 import random
 
 # ============================================================
@@ -296,6 +296,16 @@ def clean_value(value):
 # 5. COMPLETE STAR LOOKUP
 # ============================================================
 
+def logg_to_ms2(logg):
+    if logg == "Unknown":
+        return "Unknown"
+
+    # logg is log10(g) where g is in cm/s²
+    gravity_cgs = 10 ** float(logg)
+
+    # cm/s² → m/s²
+    return gravity_cgs / 100
+
 def lookup_star(kic_id):
 
     nasa_data = get_nasa_stellar_data(kic_id)
@@ -304,13 +314,15 @@ def lookup_star(kic_id):
 
     hydrogen = get_hydrogen(kic_id)
 
+    gravity = logg_to_ms2(nasa_data["Gravity"])
+
     return {
         "Oxygen": oxygen,
         "Metallicity": "Unknown",
         "Mass": nasa_data["Mass"],
-        "Gravity": nasa_data["Gravity"],
+        "Gravity": round(gravity, 2),
         "Radius": nasa_data["Radius"],
-        "Distance": nasa_data["Distance"],
+        "Distance": (nasa_data["Distance"])*3.26,
         "Hydrogen": hydrogen
     }
     return star_data
@@ -319,14 +331,14 @@ def lookup_star(kic_id):
 def get_star_info(kic_id):
 
     star_data = lookup_star(kic_id)
-
+    
     return (
         f"- Oxygen: {star_data['Oxygen']}\n"
         f"- Metallicity: {star_data['Metallicity']}\n"
-        f"- Mass: {star_data['Mass']}\n"
-        f"- Gravity: {star_data['Gravity']}\n"
-        f"- Radius: {star_data['Radius']}\n"
-        f"- Distance: {star_data['Distance']}\n"
+        f"- Mass: {star_data['Mass']} solar masses\n"
+        f"- Gravity: {star_data['Gravity']} m/s²\n"
+        f"- Radius: {star_data['Radius']} solar radii\n"
+        f"- Distance: {star_data['Distance']} light years\n"
         f"- Hydrogen: {star_data['Hydrogen']}"
     )
 
