@@ -1,6 +1,7 @@
 import csv
 import random
 import helper
+from main import get_star_summary
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -16,7 +17,8 @@ app.add_middleware(
 )
 
 
-@app.get("/explore")
+
+@app.get("/planetSelection")
 def getData():
     print("Running HI")
     helper.get_random_kpids = lambda filename: tuple(
@@ -30,3 +32,18 @@ def getData():
         )
     )
     return [helper.get_random_kpids("exo_predict.csv")]
+
+
+
+
+@app.get("/planetDetails")
+def get_planet(id: str):
+
+    text = get_star_summary(id)
+
+    return{
+        "kic_id": id,
+        "star_data":helper.lookup_star(id),
+        "composition_text":text
+    }
+

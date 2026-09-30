@@ -16,15 +16,18 @@ MODEL_NAME = "AstroMLab/AstroSage-8B"
 
 
 # ============================================================
-# 2. 4-BIT QUANTIZATION
+# 2. 8-BIT QUANTIZATION
 # ============================================================
 
 quant_config = BitsAndBytesConfig(
-    load_in_4bit=True,
-    bnb_4bit_quant_type="nf4",
-    bnb_4bit_compute_dtype=torch.float16,
-    bnb_4bit_use_double_quant=True
+    load_in_8bit=True
 )
+# quant_config = BitsAndBytesConfig(
+#     load_in_4bit=True,
+#     bnb_4bit_quant_type="nf4",
+#     bnb_4bit_compute_dtype=torch.float16,
+#     bnb_4bit_use_double_quant=True
+# )
 
 
 # ============================================================
@@ -123,7 +126,7 @@ Rules:
     return summary
 
 
-while(1):
-    kic = int(input("Enter KIC: "))
-    print(helper.get_star_info(kic))
-    print(get_star_summary(kic))
+# while(1):
+#     kic = int(input("Enter KIC: "))
+#     print(helper.get_star_info(kic))
+#     print(get_star_summary(kic))
