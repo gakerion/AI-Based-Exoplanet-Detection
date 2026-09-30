@@ -1,6 +1,6 @@
 import "./AboutUs.css";
 
-import logo from "../../assets/logo.png";
+import logo from "../../assets/dedsec.png";
 
 function AboutUs() {
   return (
