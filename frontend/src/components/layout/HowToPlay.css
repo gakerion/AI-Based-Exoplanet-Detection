@@ -1,12 +1,16 @@
+/* =========================
+   PAGE
+========================= */
 .how-to-play-page {
   min-height: 100vh;
   width: 100%;
 
-  background-image: url("../../assets/longBg.png");
-  background-size: 100% auto;
-  background-position: top center;
+  background-image: url("../../assets/fullBg.png");
+  background-size: cover;
+  background-position: center top;
   background-repeat: no-repeat;
-  background-color: #03070d;
+  background-attachment: fixed;
+  /* background-color: #03070d; */
 
   display: flex;
   justify-content: center;
@@ -18,7 +22,6 @@
   font-family: "Handjet", monospace;
   color: white;
 }
-
 
 /* =========================
    CONTAINER
@@ -86,7 +89,9 @@
 }
 
 
-/* Highlighted words */
+/* =========================
+   HIGHLIGHT
+========================= */
 
 .highlight {
   color: #a6fffb;
@@ -145,6 +150,11 @@
   line-height: 1.25;
 }
 
+
+/* =========================
+   FOOTER LINES
+========================= */
+
 .line {
   margin-bottom: 15px;
 }
@@ -154,7 +164,9 @@
 }
 
 
-/* >>> */
+/* =========================
+   ARROW
+========================= */
 
 .arrow {
   color: #a6fffb;
@@ -163,7 +175,9 @@
 }
 
 
-/* Email links */
+/* =========================
+   EMAIL LINKS
+========================= */
 
 .footer-card a {
   color: #a6fffb;
@@ -176,7 +190,9 @@
 }
 
 
-/* Copyright */
+/* =========================
+   FOOTER HIGHLIGHT
+========================= */
 
 .footer-highlight {
   color: #a6fffb;
@@ -195,7 +211,6 @@
 
   .terminal-card {
     padding: 25px;
-
     font-size: 22px;
   }
 
@@ -209,7 +224,6 @@
 
   .footer-card {
     font-size: 20px;
-
     padding: 25px;
   }
 
@@ -232,19 +246,16 @@
 
   .terminal-card {
     padding: 20px;
-
     font-size: 19px;
   }
 
   .prompt {
     font-size: 21px;
-
     margin-bottom: 25px;
   }
 
   .terminal-body {
     font-size: 18px;
-
     line-height: 1.3;
   }
 
@@ -254,13 +265,11 @@
 
   .prompt-end {
     font-size: 21px;
-
     margin-top: 25px;
   }
 
   .footer-card {
     padding: 20px;
-
     font-size: 18px;
   }
 

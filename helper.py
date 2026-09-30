@@ -1,199 +1,72 @@
-import requests
-import pandas as pd
-import io
-import torch
-
 import csv
-import math
 import random
 
-# ============================================================
-# 2. NASA EXOPLANET ARCHIVE
-# ============================================================
+import pandas as pd
+import requests
 
-NASA_TAP_URL = (
-    "https://exoplanetarchive.ipac.caltech.edu/TAP/sync"
-)
+NASA_TAP_URL = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync"
+VIZIER_URL = "https://vizier.cds.unistra.fr/viz-bin/asu-tsv"
 
 
 def get_nasa_stellar_data(kic_id):
-
-    url = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync"
-
+    """Get stellar data for one KIC ID from NASA Exoplanet Archive."""
     query = f"""
-        SELECT
-            kepid,
-            mass,
-            logg,
-            radius,
-            dist
+        SELECT kepid, mass, logg, radius, dist
         FROM keplerstellar
         WHERE kepid = {int(kic_id)}
     """
 
-    params = {
-        "query": query,
-        "format": "json"
-    }
+    params = {"query": query, "format": "json"}
 
     try:
-
-        response = requests.get(
-            url,
-            params=params,
-            timeout=30
-        )
-
+        response = requests.get(NASA_TAP_URL, params=params, timeout=30)
         response.raise_for_status()
-
         data = response.json()
 
-        if len(data) < 4:
+        if not data:
             return {
                 "Mass": "Unknown",
                 "Gravity": "Unknown",
                 "Radius": "Unknown",
-                "Distance": "Unknown"
+                "Distance": "Unknown",
             }
 
-        # ---------------------------------------------
-        # 3rd record → Mass, Gravity, Radius
-        # ---------------------------------------------
-
-        row_3 = data[2]
-
-        # ---------------------------------------------
-        # 4th record → Distance
-        # ---------------------------------------------
-
-        row_4 = data[3]
+        # The query is for one KIC, so use the returned row directly.
+        row = data[0]
 
         return {
-            "Mass": clean_value(row_3.get("mass")),
-            "Gravity": clean_value(row_3.get("logg")),
-            "Radius": clean_value(row_3.get("radius")),
-            "Distance": clean_value(row_4.get("dist"))
+            "Mass": clean_value(row.get("mass")),
+            "Gravity": clean_value(row.get("logg")),
+            "Radius": clean_value(row.get("radius")),
+            "Distance": clean_value(row.get("dist")),
         }
 
     except Exception as e:
-
         print("NASA lookup error:", e)
-
         return {
             "Mass": "Unknown",
             "Gravity": "Unknown",
             "Radius": "Unknown",
-            "Distance": "Unknown"
+            "Distance": "Unknown",
         }
-# ============================================================
-# 3. VIZIER OXYGEN CATALOG
-# ============================================================
 
-VIZIER_FIELD_URL = (
-    "https://cdsarc.cds.unistra.fr/ftp/cats/J/A+A/594/A43/field.dat"
-)
-VIZIER_URL = "https://vizier.cds.unistra.fr/viz-bin/asu-tsv"
-
-_vizier_field_data = None
-
-
-def load_vizier_catalog():
-
-    global _vizier_field_data
-
-    if _vizier_field_data is not None:
-        return _vizier_field_data
-
-    try:
-
-        response = requests.get(
-            VIZIER_FIELD_URL,
-            timeout=30
-        )
-
-        response.raise_for_status()
-
-        # The VizieR file is fixed-width.
-        #
-        # According to the catalog documentation:
-        #
-        # KIC   : columns 20-27
-        # [O/H] : columns 130-135
-        #
-        # Python uses zero-based indexing.
-
-        lines = response.text.splitlines()
-
-        records = []
-
-        for line in lines:
-
-            if len(line) < 135:
-                continue
-
-            try:
-
-                kic = line[19:27].strip()
-                oh = line[129:135].strip()
-
-                if not kic:
-                    continue
-
-                kic = int(kic)
-
-                if oh in ("", "-"):
-                    oxygen = "Unknown"
-                else:
-                    oxygen = float(oh)
-
-                records.append({
-                    "KIC": kic,
-                    "Oxygen": oxygen
-                })
-
-            except (ValueError, TypeError):
-                continue
-
-        _vizier_field_data = pd.DataFrame(records)
-
-        return _vizier_field_data
-
-    except Exception as e:
-
-        print("VizieR lookup error:", e)
-
-        return pd.DataFrame(
-            columns=["KIC", "Oxygen"]
-        )
 
 def get_oxygen(kic_id):
-
-    url = "https://vizier.cds.unistra.fr/viz-bin/asu-tsv"
-
+    """Get oxygen abundance [O/H] from the VizieR catalog."""
     params = {
         "-source": "J/A+A/594/A43/field",
         "KIC": f"={int(kic_id)}",
         "-out": "KIC,[O/H]",
-        "-out.max": "1"
+        "-out.max": "1",
     }
 
     try:
-        response = requests.get(
-            url,
-            params=params,
-            timeout=30
-        )
-
+        response = requests.get(VIZIER_URL, params=params, timeout=30)
         response.raise_for_status()
 
-        lines = response.text.splitlines()
-
-        # Find the actual data row.
-        for line in lines:
-
+        for line in response.text.splitlines():
             line = line.strip()
 
-            # Skip comments, headers, separators and empty lines
             if (
                 not line
                 or line.startswith("#")
@@ -204,134 +77,92 @@ def get_oxygen(kic_id):
 
             parts = line.split()
 
-            # Expected:
-            # 10907196 -0.16
-            if len(parts) >= 2:
-
-                returned_kic = parts[0]
-                oxygen = parts[1]
-
-                if returned_kic == str(int(kic_id)):
-
-                    try:
-                        return float(oxygen)
-                    except ValueError:
-                        return "Unknown"
+            if len(parts) >= 2 and parts[0] == str(int(kic_id)):
+                try:
+                    return float(parts[1])
+                except ValueError:
+                    return "Unknown"
 
         return "Unknown"
 
     except Exception as e:
         print("VizieR oxygen lookup error:", e)
         return "Unknown"
-    
+
+
 def get_hydrogen(kic_id):
+    """Return hydrogen abundance when a direct catalog value exists.
+
+    The current NASA keplerstellar query used by this project has no
+    hydrogen abundance field, so no estimate is made.
     """
-    Look up hydrogen for a KIC ID.
+    return "Unknown"
 
-    NASA's keplerstellar catalog does not contain
-    a direct hydrogen abundance/mass-fraction column.
-
-    Therefore, if no direct database value is available,
-    return Unknown. No estimation is performed.
-    """
-
-    url = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync"
-
-    query = f"""
-        SELECT kepid
-        FROM keplerstellar
-        WHERE kepid = {int(kic_id)}
-    """
-
-    params = {
-        "query": query,
-        "format": "json"
-    }
-
-    try:
-        response = requests.get(
-            url,
-            params=params,
-            timeout=20
-        )
-
-        response.raise_for_status()
-
-        data = response.json()
-
-        if not data:
-            return "Unknown"
-
-        # The catalog has no direct hydrogen field.
-        return "Unknown"
-
-    except Exception as e:
-        print("Hydrogen lookup error:", e)
-        return "Unknown"
-
-
-# ============================================================
-# 4. CLEAN VALUES
-# ============================================================
 
 def clean_value(value):
-
+    """Convert missing numeric/catalog values to 'Unknown'."""
     if value is None:
         return "Unknown"
 
-    if isinstance(value, float):
-
+    try:
         if pd.isna(value):
             return "Unknown"
-
-        return value
-
-    if pd.isna(value):
-        return "Unknown"
+    except (TypeError, ValueError):
+        pass
 
     return value
 
 
-# ============================================================
-# 5. COMPLETE STAR LOOKUP
-# ============================================================
-
 def logg_to_ms2(logg):
+    """Convert log10 surface gravity in cgs to m/s²."""
     if logg == "Unknown":
         return "Unknown"
 
-    # logg is log10(g) where g is in cm/s²
-    gravity_cgs = 10 ** float(logg)
+    try:
+        gravity_cgs = 10 ** float(logg)
+        return gravity_cgs / 100
+    except (TypeError, ValueError, OverflowError):
+        return "Unknown"
 
-    # cm/s² → m/s²
-    return gravity_cgs / 100
 
 def lookup_star(kic_id):
+    """Collect all available catalog information for a KIC ID."""
+    try:
+        kic_id = int(kic_id)
+    except (TypeError, ValueError):
+        raise ValueError("KIC ID must be a number.")
 
     nasa_data = get_nasa_stellar_data(kic_id)
-
     oxygen = get_oxygen(kic_id)
-
     hydrogen = get_hydrogen(kic_id)
-
     gravity = logg_to_ms2(nasa_data["Gravity"])
+
+    if gravity != "Unknown":
+        gravity = round(gravity, 2)
+
+    distance = nasa_data["Distance"]
+    if distance != "Unknown":
+        try:
+            distance = float(distance) * 3.26
+            distance = round(distance, 2)
+        except (TypeError, ValueError):
+            distance = "Unknown"
 
     return {
         "Oxygen": oxygen,
         "Metallicity": "Unknown",
         "Mass": nasa_data["Mass"],
-        "Gravity": round(gravity, 2),
+        "Gravity": gravity,
         "Radius": nasa_data["Radius"],
-        "Distance": (nasa_data["Distance"])*3.26,
-        "Hydrogen": hydrogen
+        "Distance": distance,
+        "Hydrogen": hydrogen,
     }
-    return star_data
 
 
 def get_star_info(kic_id):
-
+    """Return star data as text for use in an AI prompt."""
     star_data = lookup_star(kic_id)
-    
+
     return (
         f"- Oxygen: {star_data['Oxygen']}\n"
         f"- Metallicity: {star_data['Metallicity']}\n"
@@ -343,42 +174,43 @@ def get_star_info(kic_id):
     )
 
 
-
-
 def get_random_kpids(filename):
+    """Return 5 random KIC IDs, including one of each disposition."""
     confirmed = []
     false_positive = []
 
-    with open(filename, "r") as file:
+    with open(filename, "r", newline="", encoding="utf-8") as file:
         reader = csv.DictReader(file)
 
         for row in reader:
-            data = (row["kepid"], row["koi_disposition"])
+            kepid = row.get("kepid")
+            disposition = row.get("koi_disposition")
 
-            if row["koi_disposition"] == "CONFIRMED":
-                confirmed.append(data)
+            if not kepid:
+                continue
 
-            elif row["koi_disposition"] == "FALSE POSITIVE":
-                false_positive.append(data)
+            if disposition == "CONFIRMED":
+                confirmed.append((kepid, disposition))
+            elif disposition == "FALSE POSITIVE":
+                false_positive.append((kepid, disposition))
 
-    # Make sure we have at least one of each
-    selected = [
-        random.choice(confirmed),
-        random.choice(false_positive)
+    if not confirmed or not false_positive:
+        raise ValueError(
+            "The CSV must contain at least one CONFIRMED and one FALSE POSITIVE entry."
+        )
+
+    selected = [random.choice(confirmed), random.choice(false_positive)]
+    selected_set = set(selected)
+
+    remaining = [
+        item for item in confirmed + false_positive
+        if item not in selected_set
     ]
 
-    # Combine the two categories
-    remaining = confirmed + false_positive
+    if len(remaining) < 3:
+        raise ValueError("The CSV must contain at least 5 usable entries.")
 
-    # Remove the two already selected
-    remaining.remove(selected[0])
-    remaining.remove(selected[1])
-
-    # Pick 3 more
-    selected += random.sample(remaining, 3)
-
-    # Shuffle the result
+    selected.extend(random.sample(remaining, 3))
     random.shuffle(selected)
 
     return selected
-

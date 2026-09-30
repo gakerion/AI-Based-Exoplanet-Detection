@@ -1,83 +1,66 @@
 import helper
-
-
-import pandas as pd
-
 import torch
-from transformers import (
-    AutoTokenizer,
-    AutoModelForCausalLM,
-    BitsAndBytesConfig
-)
-
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 MODEL_NAME = "AstroMLab/AstroSage-8B"
 
+# Model objects are created during FastAPI startup, not during a request.
+tokenizer = None
+model = None
+
+quant_config = BitsAndBytesConfig(load_in_8bit=True)
 
 
-# ============================================================
-# 2. 8-BIT QUANTIZATION
-# ============================================================
+def load_model():
+    """Load AstroSage once into memory/VRAM."""
+    global tokenizer, model
 
-quant_config = BitsAndBytesConfig(
-    load_in_8bit=True
-)
-# quant_config = BitsAndBytesConfig(
-#     load_in_4bit=True,
-#     bnb_4bit_quant_type="nf4",
-#     bnb_4bit_compute_dtype=torch.float16,
-#     bnb_4bit_use_double_quant=True
-# )
+    if model is not None and tokenizer is not None:
+        print("AstroSage is already loaded.")
+        return
 
+    print("Loading AstroSage tokenizer...")
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 
-# ============================================================
-# 3. LOAD TOKENIZER
-# ============================================================
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
 
-print("Loading tokenizer...")
+    print("Loading AstroSage-8B in 8-bit...")
+    model = AutoModelForCausalLM.from_pretrained(
+        MODEL_NAME,
+        quantization_config=quant_config,
+        device_map="auto",
+        torch_dtype=torch.float16,
+        low_cpu_mem_usage=True,
+    )
 
-tokenizer = AutoTokenizer.from_pretrained(
-    MODEL_NAME
-)
-
-if tokenizer.pad_token is None:
-    tokenizer.pad_token = tokenizer.eos_token
+    model.eval()
+    print("AstroSage model loaded successfully.")
 
 
-# ============================================================
-# 4. LOAD MODEL
-# ============================================================
+def get_star_summary(kic_id, star_data=None):
+    """Generate one concise AstroSage summary for a KIC ID."""
+    if model is None or tokenizer is None:
+        raise RuntimeError("AstroSage has not been loaded yet.")
 
-print("Loading AstroSage-8B in 4-bit...")
+    if star_data is None:
+        star_data = helper.lookup_star(kic_id)
 
-model = AutoModelForCausalLM.from_pretrained(
-    MODEL_NAME,
-    quantization_config=quant_config,
-    device_map="auto",
-    torch_dtype=torch.float16,
-    low_cpu_mem_usage=True
-)
+    star_info = (
+        f"- Oxygen: {star_data['Oxygen']}\n"
+        f"- Metallicity: {star_data['Metallicity']}\n"
+        f"- Mass: {star_data['Mass']} solar masses\n"
+        f"- Gravity: {star_data['Gravity']} m/s²\n"
+        f"- Radius: {star_data['Radius']} solar radii\n"
+        f"- Distance: {star_data['Distance']} light years\n"
+        f"- Hydrogen: {star_data['Hydrogen']}"
+    )
 
-model.eval()
-
-print("Model loaded.")
-
-
-# ============================================================
-# 1. Load dataset
-# ============================================================
-
-def get_star_summary(kic_id):
-
-    # Get all catalog data for this KIC ID
-    star_data = helper.get_star_info(kic_id)
-
-    prompt = f"""
-You are an astronomy assistant.
+    prompt = f"""You are an astronomy assistant.
 
 Analyze the following catalog data for KIC {kic_id}:
 
-{star_data}
+{star_info}
 
 Write ONE concise scientific summary in a single paragraph.
 
@@ -92,41 +75,23 @@ Rules:
 - STOP after the first paragraph.
 """
 
-    # Tokenize prompt
-    inputs = tokenizer(
-        prompt,
-        return_tensors="pt"
-    )
+    inputs = tokenizer(prompt, return_tensors="pt")
 
-    inputs = {
-        key: value.to(model.device)
-        for key, value in inputs.items()
-    }
+    # With device_map="auto", put inputs on the model's input device.
+    input_device = next(model.parameters()).device
+    inputs = {key: value.to(input_device) for key, value in inputs.items()}
 
-    # Generate AstroSage response
     with torch.no_grad():
-
         outputs = model.generate(
             **inputs,
             max_new_tokens=100,
             do_sample=False,
-            pad_token_id=tokenizer.eos_token_id
+            pad_token_id=tokenizer.eos_token_id,
         )
 
-    # Remove prompt from generated output
-    generated_tokens = outputs[0][
-        inputs["input_ids"].shape[1]:
-    ]
+    generated_tokens = outputs[0, inputs["input_ids"].shape[1]:]
 
-    summary = tokenizer.decode(
+    return tokenizer.decode(
         generated_tokens,
-        skip_special_tokens=True
+        skip_special_tokens=True,
     ).strip()
-
-    return summary
-
-
-# while(1):
-#     kic = int(input("Enter KIC: "))
-#     print(helper.get_star_info(kic))
-#     print(get_star_summary(kic))

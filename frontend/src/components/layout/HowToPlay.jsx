@@ -1,177 +1,124 @@
 import "./HowToPlay.css";
 
+import logo from "../../assets/dedsec.png";
+
 function HowToPlay() {
   return (
     <div className="how-to-play-page">
 
       <div className="how-to-play-container">
 
-        {/* Main Terminal Box */}
-        <main className="how-to-play-card">
+        {/* Main Message Card */}
+        <main className="terminal-card">
 
-          <div className="how-line">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
-            WELCOME, ASTRONAUT.
+          <div className="prompt">
+            &gt;&gt;&gt; Good morning, Boss.
+            <br />
+            <br />
+
+            <div className="terminal-body">
+
+              <p>
+                I am pleased to inform you that you survived the jump, though
+                my diagnostics suggest celebrating just yet would be premature.
+                Main power is offline, and reserve life support is draining
+                rapidly—your remaining supply of{" "}
+                <span className="highlight">
+                  oxygen, overall ship hull strength, and thruster fuel
+                </span>{" "}
+                gives us a very narrow survival window. I have scanned our
+                immediate sector and isolated five candidate star systems using
+                their{" "}
+                <span className="highlight">
+                  Kepler Input Catalog (KIC)
+                </span>{" "}
+                designations. Our mission is straightforward: locate an
+                exoplanet with the right environmental conditions before your
+                life support reads zero.
+              </p>
+
+              <p>
+                To proceed, select a target KIC ID from your console so I can
+                initiate a high-resolution spectroscopic scan. If an exoplanet
+                is detected, I will immediately analyze its elemental
+                composition for vital resources. If a single planet lacks
+                everything you need to sustain life, you will need to plan a
+                multi-system route—carefully calculating your fuel burn and
+                transit time to harvest missing components across multiple
+                worlds. Miscalculate your trajectory to a wrong exoplanet,
+                ignore the sensor data, or simply hesitate too long, and I'm
+                afraid life support will cease permanently.
+              </p>
+
+              <p>
+                Whenever you are ready, Captain.
+              </p>
+
+            </div>
           </div>
 
-          <div className="how-line">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
-            You are stranded somewhere in the deep reaches of space.
-            Your ship is running low on essential resources and you
-            need to find them before it is too late.
-          </div>
-
-          <div className="how-line">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
-            Five mysterious exoplanets have appeared on your navigation
-            terminal. Your mission is simple: explore them, analyse
-            their composition and collect the resources you need.
-          </div>
-
-          <div className="how-line">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
-            STEP 01 — SELECT A PLANET
-          </div>
-
-          <div className="how-line">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
-            Choose one of the five planets displayed on your terminal.
-            Every planet has different properties and resources.
-          </div>
-
-          <div className="how-line">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
-            STEP 02 — SCAN THE PLANET
-          </div>
-
-          <div className="how-line">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
-            The system will analyse the planet and reveal information
-            such as oxygen, hydrogen, metallicity, mass, radius,
-            distance and gravity.
-          </div>
-
-          <div className="how-line">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
-            STEP 03 — WATCH THE GRAVITY
-          </div>
-
-          <div className="how-line">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
-            Your spacecraft has a maximum acceleration limit.
-            If the planet's gravity is greater than your maximum
-            acceleration, your ship will not survive the landing.
-          </div>
-
-          <div className="how-line">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
-            STEP 04 — COLLECT RESOURCES
-          </div>
-
-          <div className="how-line">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
-            If a planet contains one of the required elements,
-            you can collect it. You need to explore different planets
-            to complete your resource requirements.
-          </div>
-
-          <div className="how-line">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
-            STEP 05 — COMPLETE THE MISSION
-          </div>
-
-          <div className="how-line">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
-            Collect all four required elements:
-            OXYGEN, HYDROGEN, IRON and CARBON.
-            Once all four are secured, the mission is complete.
-          </div>
-
-          <div className="how-line">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
-          </div>
-
-          <div className="how-line">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
-            REMEMBER:
-          </div>
-
-          <div className="how-line">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
-            Resources are limited. Gravity can kill you.
-            Choose your planets carefully.
-          </div>
-
-          <div className="how-line how-bold">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
-            GOOD LUCK, ASTRONAUT.
-          </div>
-
-          <div className="how-line how-bold">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
-            YOUR MISSION STARTS NOW.
+          <div className="prompt-end">
+            &gt;&gt;&gt;
           </div>
 
         </main>
 
 
         {/* DEDSEC Logo */}
-        <div className="how-logo-container">
+        <div className="logo-container">
           <img
-            src="/logo.png"
+            src={logo}
             alt="DEDSEC Logo"
-            className="how-dedsec-logo"
+            className="dedsec-logo"
           />
         </div>
 
 
         {/* Footer Card */}
-        <footer className="how-footer-card">
+        <footer className="footer-card">
 
-          <div className="how-footer-line">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
+          <div className="line">
+            <span className="arrow">&gt;&gt;&gt;</span>
             YOU ARE ON DEDSEC PROPERTY
           </div>
 
-          <div className="how-footer-line">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
+          <div className="line">
+            <span className="arrow">&gt;&gt;&gt;</span>
             For more information contact:{" "}
             <a href="mailto:mohammed_b261522mt@nitc.ac.in">
               mohammed_b261522mt@nitc.ac.in
             </a>
           </div>
 
-          <div className="how-footer-line">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
+          <div className="line">
+            <span className="arrow">&gt;&gt;&gt;</span>
             or:{" "}
             <a href="mailto:darshan_d260449ma@nitc.ac.in">
               darshan_d260449ma@nitc.ac.in
             </a>
           </div>
 
-          <div className="how-footer-line">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
+          <div className="line">
+            <span className="arrow">&gt;&gt;&gt;</span>
             or:{" "}
             <a href="mailto:chetan_b260436ec@nitc.ac.in">
               chetan_b260436ec@nitc.ac.in
             </a>
           </div>
 
-          <div className="how-footer-line">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
-            or:{" "}
-            <a href="mailto:akshal_b260226ee@nitc.ac.in">
-              akshal_b260226ee@nitc.ac.in
-            </a>
-          </div>
-
-          <div className="how-footer-line how-colored">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
+          <div
+            className="line"
+            style={{ color: "#A6FFFB" }}
+          >
+            <span className="arrow">&gt;&gt;&gt;</span>
             COPYRIGHT © 2026 | ALL RIGHTS RESERVED | REFRAIN FROM bs
           </div>
 
-          <div className="how-footer-line how-colored">
-            <span className="how-arrow">&gt;&gt;&gt;</span>
+          <div
+            className="line"
+            style={{ color: "#A6FFFB" }}
+          >
+            <span className="arrow">&gt;&gt;&gt;</span>
             lawyers and docs are banned for life :|.
           </div>
 

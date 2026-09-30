@@ -38,15 +38,18 @@ function MissionResult() {
 
           <p>
             <span>&gt;&gt;&gt;</span>{" "}
-            Congratulations: you must be dead by now.
-            You failed to collect the following elements:
+            Congratulations: you have successfully rescued yourself, the crew mates and the ship somehow. You barely made it alive.
           </p>
 
-          {failedElements.map((element) => (
+          <p><span>&gt;&gt;&gt;</span> Oxygen</p>
+          <p><span>&gt;&gt;&gt;</span> Metallicity</p>
+          <p><span>&gt;&gt;&gt;</span> Hydrogen</p>
+
+          {/* {failedElements.map((element) => (
             <p key={element}>
               <span>&gt;&gt;&gt;</span> {element}
             </p>
-          ))}
+          ))} */}
 
         </div>
 

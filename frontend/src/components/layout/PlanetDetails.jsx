@@ -17,7 +17,7 @@ function PlanetDetails() {
         setLoading(true);
 
         const response = await fetch(
-          `http://localhost:8000/planet?id=${planet.id}`,
+          `http://localhost:8000/planetDetails?id=${planet.id}`,
           {
             method: "POST",
           }
@@ -80,7 +80,8 @@ function PlanetDetails() {
             <p>Scanning planet...</p>
           ) : details ? (
             <>
-              <p>
+            <p>{details.composition_text}</p>
+              {/* <p>
                 Oxygen: {details.Oxygen}
               </p>
 
@@ -106,7 +107,7 @@ function PlanetDetails() {
 
               <p>
                 Distance: {details.Distance}
-              </p>
+              </p> */}
             </>
           ) : (
             <p>Unable to retrieve planet data.</p>

@@ -24,9 +24,9 @@ function Mission() {
             <span>&gt;&gt;&gt;</span> You have collected the following elements:
           </p>
 
-          <p><span>&gt;&gt;&gt;</span> X</p>
-          <p><span>&gt;&gt;&gt;</span> Y</p>
-          <p><span>&gt;&gt;&gt;</span> Z</p>
+          <p><span>&gt;&gt;&gt;</span> Oxygen</p>
+          <p><span>&gt;&gt;&gt;</span> Metallicity</p>
+          <p><span>&gt;&gt;&gt;</span> Hydrogen</p>
         </div>
       </div>
 

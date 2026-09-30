@@ -39,11 +39,11 @@ function Navbar() {
           Play
         </NavLink>
 
-        <NavLink to="/how-to-play">
+        <NavLink to="/howToPlay">
           How to play
         </NavLink>
 
-        <NavLink to="/about">
+        <NavLink to="/aboutUs">
           About Us
         </NavLink>
       </div>
